@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-model = ultralytics.YOLO("yolo11n.pt")
+model = ultralytics.YOLO("yolo11l.pt")
 
 # Configuración del texto y los colores
 font = cv2.FONT_HERSHEY_SIMPLEX
