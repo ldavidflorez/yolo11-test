@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Processing with FastAPI</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+
+        .frame {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        video,
+        img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .btn-upload {
+            margin-top: 15px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <!-- Frame izquierdo: Cargar y reproducir el video -->
+            <div class="col-md-6 frame">
+                <h4 class="text-center mb-3">Upload & Play Video</h4>
+                <video id="videoPlayer" controls class="mb-3"></video>
+                <input type="file" id="videoInput" accept="video/*" class="form-control mb-2">
+                <button id="uploadButton" class="btn btn-primary btn-upload">Upload and Process</button>
+            </div>
+
+            <!-- Frame derecho: Mostrar el procesamiento -->
+            <div class="col-md-6 frame">
+                <h4 class="text-center mb-3">Processed Video Stream</h4>
+                <img id="processedStream" src="" alt="Processing Stream" class="mb-3">
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery y Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const videoInput = document.getElementById('videoInput');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const uploadButton = document.getElementById('uploadButton');
+        const processedStream = document.getElementById('processedStream');
+        const refreshButton = document.getElementById('refreshButton');
+
+        let videoFile;
+
+        // Al seleccionar un archivo de video
+        videoInput.addEventListener('change', (event) => {
+            videoFile = event.target.files[0];
+            const videoURL = URL.createObjectURL(videoFile);
+            videoPlayer.src = videoURL;
+        });
+
+        // Al hacer clic en el botón "Upload and Process"
+        uploadButton.addEventListener('click', async () => {
+            if (!videoFile) {
+                alert("Please select a video file first.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", videoFile);
+
+            // Enviar el video al backend para su procesamiento
+            await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            // Iniciar el streaming del procesamiento
+            processedStream.src = "/stream";
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,8 @@
+ultralytics===8.3.27
+opencv-python
+fastapi==0.111.1
+nest-asyncio
+pyngrok
+uvicorn
+python-multipart
+python-dotenv
